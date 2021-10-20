@@ -1,50 +1,53 @@
 package com.example.Addressbook.services;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.Addressbook.dto.AddressbookDTO;
+import com.example.Addressbook.exceptions.AddressbookException;
 import com.example.Addressbook.model.Addressbook;
+import com.example.Addressbook.repository.AddressbookRepository;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class AddressbookService implements IAddressbookService{
 
-	private List<Addressbook> addressbookList = new ArrayList<>();
-	
+	@Autowired
+	private AddressbookRepository addressbookRepository;
+		
 	@Override
 	public List<Addressbook> getAddressbookData() {
-		return addressbookList;
+		return addressbookRepository.findAll();
 	}
 
 	@Override
 	public Addressbook getAddressbookDataById(int AddressId) {
-		return addressbookList.get(AddressId-1);
+		return addressbookRepository.findById(AddressId).orElseThrow( () -> new AddressbookException("Addressbook with addressbookId :" + AddressId + "does not exist"));
 	}
 
 	@Override
-	public Addressbook createAAddressBookData(AddressbookDTO addressbookDTO) {
+	public Addressbook createAddressBookData(AddressbookDTO addressbookDTO) {
 		Addressbook addData = null;
-		addData = new Addressbook(addressbookList.size()+1, addressbookDTO);
-		addressbookList.add(addData);
-		return addData;
+		addData = new Addressbook(addressbookDTO);
+		log.info("Addressbook data :"+addData.toString());
+		return addressbookRepository.save(addData);
 	}
 
 	@Override
 	public Addressbook updateAddressBookData(int AddressID, AddressbookDTO addressbookDTO) {	
 		Addressbook addData = this.getAddressbookDataById(AddressID);
-		addData.setName(addressbookDTO.name);
-		addData.setAddress(addressbookDTO.address);
-		addData.setPhoneNo(addressbookDTO.phoneNo);
-		addData.setEmail(addressbookDTO.email);
-		addressbookList.set(AddressID-1, addData);
-		return addData;
+		addData.updateAddressbookData(addressbookDTO);
+		return addressbookRepository.save(addData);
 	}
 
 	@Override
 	public void deleteAddressbookData(int addressId) {
-		addressbookList.remove(addressId-1);
+		Addressbook addData = this.getAddressbookDataById(addressId);
+		addressbookRepository.delete(addData);
 	}
 
 }
