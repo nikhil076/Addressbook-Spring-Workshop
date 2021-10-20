@@ -1,30 +1,27 @@
 package com.example.Addressbook.dto;
 
-public class AddressbookDTO {
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
+
+import lombok.ToString;
+
+public @ToString class AddressbookDTO {
 
 	public int id;
+	
+	@Pattern(regexp = "^[A-Z]{1}[a-zA-Z\\s]{2,}$", message = "Addressbook name invalid")
 	public String name;
+	
+	 @NotEmpty(message = "Address cannot be null")
+	 @Pattern(regexp = "^[A-Z][a-zA-Z0-9\\s]+$", message = "Person Address Invalid")
 	public String address;
+	
+
+	@NotEmpty(message = "PhoneNo cannot be null")
+	@Pattern(regexp = "^[0-9]{10}$", message = "Person PhoneNo Invalid")
 	public String phoneNo;
+	
+	
 	public String email;
 	
-	public AddressbookDTO() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	public AddressbookDTO(int id, String name, String address, String phoneNo, String email) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.address = address;
-		this.phoneNo = phoneNo;
-		this.email = email;
-	}
-
-	@Override
-	public String toString() {
-		return "AddressbookDTO [id=" + id + ", name=" + name + ", address=" + address + ", phoneNo=" + phoneNo
-				+ ", email=" + email + "]";
-	}
 }
