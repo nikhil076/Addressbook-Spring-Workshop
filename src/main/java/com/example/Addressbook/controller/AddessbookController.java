@@ -26,6 +26,10 @@ public class AddessbookController {
 	@Autowired
 	private IAddressbookService addressbookService;
 	
+	/**
+	 * Ability to get list of all addressbook
+	 * @return respDTO
+	 */
 	@RequestMapping(value = {"","/","/get"})
 	public ResponseEntity<ResponseDTO> getAddressbookData(){
 		List<Addressbook> addDataList = null;
@@ -34,6 +38,12 @@ public class AddessbookController {
 		return new ResponseEntity<ResponseDTO>(respDTO, HttpStatus.OK);
 	}
 	
+	
+	/**
+	 * Ability to get addressbook by id
+	 * @param addressId
+	 * @return respDTO
+	 */
 	@GetMapping("/get/{addressId}")
 	public ResponseEntity<ResponseDTO> getAddressbookData(@PathVariable("addressId") int addressId){
 		Addressbook addData = null;
@@ -42,15 +52,27 @@ public class AddessbookController {
 		return new ResponseEntity<ResponseDTO>(respDTO, HttpStatus.OK);
 	}
 	
+	
+	/**
+	 * Ability to add the addressbook data
+	 * @param addressbookDTO
+	 * @return respDTO
+	 */
 	@PostMapping("/create")
-	public ResponseEntity<ResponseDTO> createEmployeePayrollData(@RequestBody AddressbookDTO addressbookDTO){
+	public ResponseEntity<ResponseDTO> createAddressbookData(@RequestBody AddressbookDTO addressbookDTO){
 		Addressbook addData = null;
-		addData = addressbookService.createAAddressBookData(addressbookDTO);
+		addData = addressbookService.createAddressBookData(addressbookDTO);
 		ResponseDTO respDTO = new ResponseDTO("Create Addressbook successfull", addData);
 		return new ResponseEntity<ResponseDTO>(respDTO,HttpStatus.OK);
 	}
 	
-	@PutMapping("/update/{empId}")
+	/**
+	 * Ability to delete address by id
+	 * @param addressId
+	 * @param addressbookDTO
+	 * @return respDTO
+	 */
+	@PutMapping("/update/{addressId}")
 	public ResponseEntity<ResponseDTO> updateAddressbooksData(@PathVariable("addressId") int addressId, @RequestBody AddressbookDTO addressbookDTO){
 		Addressbook addData = null;
 		addData = addressbookService.updateAddressBookData(addressId, addressbookDTO);
@@ -58,7 +80,7 @@ public class AddessbookController {
 		return new ResponseEntity<ResponseDTO>(respDTO, HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/delete/{empid}")
+	@DeleteMapping("/delete/{addressId}")
 	public ResponseEntity<ResponseDTO> deleteAddressbookData(@PathVariable("addressId") int addressId){
 		addressbookService.deleteAddressbookData(addressId);
 		ResponseDTO respDTO = new ResponseDTO("Delete Successfull", "Deleted id : "+addressId);
